@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommentService} from "../service/comment.service";
-import {Subject} from "rxjs/Subject";
 import {Comment} from "../model/comment.model";
 
 @Component({
@@ -14,19 +13,21 @@ export class CommentsComponent implements OnInit {
   @Input() title: string;
 
   showInfoMessage: boolean = false;
-  comments$: Subject<any>;
+  comments: Array<Comment>;
 
   constructor(private commentService: CommentService) {
   }
 
   ngOnInit() {
-    this.commentService.get(this.id);
-    this.commentService.initEventSource(this.id);
-    this.comments$ = this.commentService.getComments();
+    this.commentService.getLatestComments(this.id)
+      .subscribe((comment: Comment) => {
+        this.comments.push(comment);
+      });
 
-    this.comments$
+    this.commentService.getById(this.id)
       .subscribe((comments: Array<Comment>) => {
         if (comments.length) {
+          this.comments = comments;
           this.showInfoMessage = false;
         } else {
           this.showInfoMessage = true;

@@ -1,14 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {Inject, NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { BabblerComponent } from './babbler/babbler.component';
-import { AddCommentComponent } from './add-comment/add-comment.component';
-import { CommentsComponent } from './comments/comments.component';
+import {AppComponent} from './app.component';
+import {BabblerComponent} from './babbler/babbler.component';
+import {AddCommentComponent} from './add-comment/add-comment.component';
+import {CommentsComponent} from './comments/comments.component';
 import {HttpModule} from '@angular/http';
 import {CommentService} from './service/comment.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { OrderByDatePipe } from './pipe/order-by-date.pipe';
+import {OrderByDatePipe} from './pipe/order-by-date.pipe';
 import {TimeAgoPipe} from 'time-ago-pipe';
 
 @NgModule({

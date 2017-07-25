@@ -6,7 +6,7 @@
       <hr>
       <p *ngIf="showInfoMessage">Be first to post comment!</p>
       <ul class="comments-list">
-        <li class="comment" *ngFor="let comment of comments$ | async | orderByDate">
+        <li class="comment" *ngFor="let comment of comments | orderByDate">
           <a class="pull-left" href="#">
             <img class="avatar" src="http://bootdey.com/img/Content/user_1.jpg" alt="avatar">
           </a>

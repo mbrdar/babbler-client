@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, RequestOptions, URLSearchParams} from '@angular/http';
 import {Subject} from 'rxjs/Subject';
 import * as EventSource from 'eventsource';
 import {Observable} from 'rxjs/Observable';
@@ -13,24 +13,30 @@ export class CommentService {
   private _comments$ = new Subject<any>();
 
   constructor(@Inject('BACKEND_API_URL') private backendApi: string, private http: Http) {
-
-    const source = new EventSource(`${this.backendApi}/comments/event-stream`);
-    source.addEventListener('comment-added', (event) => {
-      this._comments.push(<Comment> JSON.parse(event.data));
-      this._comments$.next(this._comments);
-    }, false);
   }
 
-  add(nickname: string, content: string): Observable<any> {
-    return this.http.post(`${this.backendApi}/comments`, {nickname: nickname, content: content});
+  add(comment: Comment): Observable<any> {
+    return this.http.post(`${this.backendApi}/comments`, comment);
   }
 
   getComments(): Subject<any> {
     return this._comments$;
   }
 
-  get(): void {
-    this.http.get(`${this.backendApi}/comments`)
+  initEventSource(id: string) {
+    const source = new EventSource(`${this.backendApi}/comments/event-stream?newsId=${id}`);
+    source.addEventListener('comment-added', (event) => {
+      this._comments.push(<Comment> JSON.parse(event.data));
+      this._comments$.next(this._comments);
+    }, false);
+  }
+
+  get(id: string): void {
+    const params: URLSearchParams = new URLSearchParams();
+    params.set('newsId', id);
+    const requestOptions = new RequestOptions();
+    requestOptions.params = params;
+    this.http.get(`${this.backendApi}/comments`, requestOptions)
       .map((response: any) => <Comment[]> response.json())
       .subscribe((comments: Comment[]) => {
         this._comments = comments;

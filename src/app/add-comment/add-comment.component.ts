@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CommentService} from '../service/comment.service';
 import {Subject} from 'rxjs/Subject';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
+import {Comment} from "../model/comment.model";
 
 @Component({
   selector: 'add-comment',
@@ -10,6 +11,9 @@ import 'rxjs/add/operator/debounceTime';
   styleUrls: ['./add-comment.component.css']
 })
 export class AddCommentComponent {
+
+  @Input() id: string;
+  @Input() title: string;
 
   showError: boolean = false;
 
@@ -27,18 +31,25 @@ export class AddCommentComponent {
     this._clickStream$
       .debounceTime(250)
       .subscribe(() => {
-      if (this.commentForm.valid) {
-        this.showError = false;
-        this._commentService.add(this.commentForm.controls.nickname.value, this.commentForm.controls.content.value)
-          .subscribe((success) => {
-              this.showError = false;
-              this.commentForm.reset();
-            },
-            (error) => {
-              this.showError = true;
-            });
-      }
-    });
+        if (this.commentForm.valid) {
+          this.showError = false;
+          this._commentService.add(
+            new Comment({
+              newsId: this.id,
+              newsTitle: this.title,
+              nickname: this.commentForm.controls.nickname.value,
+              content: this.commentForm.controls.content.value
+            })
+          )
+            .subscribe((success) => {
+                this.showError = false;
+                this.commentForm.reset();
+              },
+              (error) => {
+                this.showError = true;
+              });
+        }
+      });
   }
 
 }

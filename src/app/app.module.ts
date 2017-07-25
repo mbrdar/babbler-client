@@ -30,6 +30,8 @@ import {TimeAgoPipe} from 'time-ago-pipe';
     CommentService,
     {provide: 'BACKEND_API_URL', useValue: 'http://localhost:8080'}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [BabblerComponent]
 })
-export class AppModule { }
+export class BabblerClient {
+}

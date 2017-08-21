@@ -7,8 +7,18 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class BabblerComponent implements OnInit {
 
-  @Input() id: string;
-  @Input() title: string;
+  id: string;
+  title: string;
+
+  @Input('id')
+  set newsId(id: string) {
+    this.id = id;
+  };
+
+  @Input('title')
+  set newsTitle(title: string) {
+    this.title = title;
+  };
 
   constructor() {
   }

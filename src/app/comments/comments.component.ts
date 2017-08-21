@@ -9,8 +9,19 @@ import {Comment} from "../model/comment.model";
 })
 export class CommentsComponent implements OnInit {
 
-  @Input() id: string;
-  @Input() title: string;
+  id: string;
+  title: string;
+
+  @Input('id')
+  set newsId(id: string) {
+    this.id = id;
+    this.ngOnInit();
+  };
+
+  @Input('title')
+  set newsTitle(title: string) {
+    this.title = title;
+  };
 
   showInfoMessage: boolean = false;
   comments: Array<Comment>;

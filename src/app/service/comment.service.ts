@@ -8,6 +8,8 @@ import * as EventSource from 'eventsource';
 @Injectable()
 export class CommentService {
 
+  private eventSource: EventSource;
+
   constructor(@Inject('BACKEND_API_URL') private backendApi: string, private http: Http) {
   }
 
@@ -17,12 +19,18 @@ export class CommentService {
 
   getLatestComments(id: string): Observable<Comment> {
     return Observable.create(observer => {
-      const eventSource = new EventSource(`${this.backendApi}/comments/event-stream?newsId=${id}`);
-      eventSource.addEventListener('comment-added', (event) => {
+      this.eventSource = new EventSource(`${this.backendApi}/comments/event-stream?newsId=${id}`);
+      this.eventSource.addEventListener('comment-added', (event) => {
         observer.next(<Comment> JSON.parse(event.data));
       }, false);
 
     })
+  }
+
+  closeEventStreamConnection() {
+    if (this.eventSource) {
+      this.eventSource.close();
+    }
   }
 
   getById(id: string): Observable<any> {

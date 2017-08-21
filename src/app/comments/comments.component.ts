@@ -7,15 +7,16 @@ import {Comment} from "../model/comment.model";
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css']
 })
-export class CommentsComponent implements OnInit {
+export class CommentsComponent {
 
   id: string;
   title: string;
 
   @Input('id')
   set newsId(id: string) {
+    this.commentService.closeEventStreamConnection();
     this.id = id;
-    this.ngOnInit();
+    this.initComments();
   };
 
   @Input('title')
@@ -29,7 +30,7 @@ export class CommentsComponent implements OnInit {
   constructor(private commentService: CommentService) {
   }
 
-  ngOnInit() {
+  private initComments(): void {
     this.commentService.getLatestComments(this.id)
       .subscribe((comment: Comment) => {
         this.comments.push(comment);
@@ -43,7 +44,6 @@ export class CommentsComponent implements OnInit {
         } else {
           this.showInfoMessage = true;
         }
-      })
+      });
   }
-
 }
